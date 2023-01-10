@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using Telerik.JustMock;
+using Telerik.JustMock.XUnit;
 
 namespace JustMockCourse.BasicScenarios.Assertions;
 
@@ -14,7 +16,7 @@ public class AssertionsTest
   public void ShouldTestCallOccursExactlyThreeTimes()
   {
     // Arrange 
-    IStringConverter converter = null;
+    IStringConverter converter = Mock.Create<IStringConverter>();
 
     // Act 
     converter.ToUpperCase("click");
@@ -23,14 +25,16 @@ public class AssertionsTest
 
 
     // Assert
-    // Mock.Assert(() => converter.ToUpperCase(Arg.AnyString), Occurs.Exactly(3));
+    Mock.Assert(() => converter.ToUpperCase(Arg.AnyString), Occurs.Exactly(3));
   }
 
   [Fact]
   public void ShouldTestCallOccursExactlyTwice()
   {
     // Arrange 
-    IStringConverter converter = null;
+    IStringConverter converter = Mock.Create<IStringConverter>();
+
+    Mock.Arrange(() => converter.ToUpperCase(Arg.AnyString)).Occurs(2);
 
     // Act 
     var act = () =>
@@ -41,16 +45,19 @@ public class AssertionsTest
     };
 
     // Assert
-    //act.Should().Throw<AssertFailedException>();
-    //var assert = () => { Mock.Assert(converter); };
-    //assert.Should().Throw<AssertFailedException>();
+    act.Should().Throw<AssertFailedException>();
+    var assert = () => { Mock.Assert(converter); };
+    assert.Should().Throw<AssertFailedException>();
   }
 
   [Fact]
   public void ShouldTestCallOrder()
   {
     // Arrange 
-    IStringConverter converter = null;
+    IStringConverter converter = Mock.Create<IStringConverter>();
+
+    Mock.Arrange(() => converter.ToLowerCase(Arg.AnyString)).InOrder().Occurs(2);
+    Mock.Arrange(() => converter.ToUpperCase(Arg.AnyString)).InOrder();
 
     // Act
     converter.ToLowerCase("CLICK");

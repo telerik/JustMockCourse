@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <EnvironmentVariables>
+      <JUSTMOCK_INSTANCE>1</JUSTMOCK_INSTANCE>
+      <CORECLR_ENABLE_PROFILING>1</CORECLR_ENABLE_PROFILING>
+      <CORECLR_PROFILER>{B7ABE522-A68F-44F2-925B-81E7488E9EC0}</CORECLR_PROFILER>
+      <CORECLR_PROFILER_PATH>c:\users\asus\.nuget\packages\justmock.commercial\2022.3.1109.1\runtimes\win-x64\native\Telerik.CodeWeaver.Profiler.dll</CORECLR_PROFILER_PATH>
+    </EnvironmentVariables>
+  </RunConfiguration>
+</RunSettings>

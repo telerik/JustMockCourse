@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using Telerik.JustMock;
+using Telerik.JustMock.Core;
 
 namespace JustMockCourse.BasicScenarios.PublicProperties;
 
@@ -13,7 +15,9 @@ public class PropertiesTest
   public void ShouldFakePropertyGet()
   {
     // Arrange 
-    IEntity entity = null;
+    IEntity entity = Mock.Create<IEntity>();
+
+    Mock.Arrange(() => entity.Id).Returns(25);
 
     // Act 
     int actual = entity.Id;
@@ -26,27 +30,31 @@ public class PropertiesTest
   public void ShouldAssertPropertySet()
   {
     // Arrange 
-    IEntity entity = null;
+    IEntity entity = Mock.Create<IEntity>();
+
+    Mock.ArrangeSet(() => entity.Id = 1);
 
     // Act 
     entity.Id = 1;
 
     // Assert 
-    // Mock.AssertSet(() => entity.Id = 1);
+    Mock.AssertSet(() => entity.Id = 1);
   }
 
   [Fact]
   public void ShouldThrowExceptionOnTheThirdPropertySetCall()
   {
     // Arrange 
-    IEntity entity = null;
+    IEntity entity = Mock.Create<IEntity>(Behavior.Strict);
+
+    Mock.ArrangeSet(() => entity.Id = Arg.Matches<int>(x => x < 10));
 
     // Act 
     Action firstAction = () => entity.Id = 5;
     Action secondAction = () => entity.Id = 15;
 
     // Assert 
-    // firstAction.Should().NotThrow();
-    // secondAction.Should().Throw<StrictMockException>();
+    firstAction.Should().NotThrow();
+    secondAction.Should().Throw<StrictMockException>();
   }
 }

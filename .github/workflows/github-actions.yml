@@ -1,0 +1,26 @@
+name: dotnet
+
+on: 
+  push:
+    branches: [final]
+
+  workflow_dispatch:
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK 6.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.x'
+      - name: Install dependencies
+        run: dotnet restore
+        env: 
+          TELERIK_USERNAME: ${{ secrets.TELERIK_USERNAME }}
+          TELERIK_PASSWORD: ${{ secrets.TELERIK_PASSWORD }}
+      - name: Test
+        run: dotnet test -s github.runsettings --no-restore --verbosity normal

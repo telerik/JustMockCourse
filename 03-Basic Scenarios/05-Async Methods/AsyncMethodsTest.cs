@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Telerik.JustMock;
 
 namespace JustMockCourse.BasicScenarios.AsyncMethods;
 
@@ -26,6 +27,8 @@ public class AsyncMethodsTest
 
     Customer expected = new Customer() { Name = "Jean-Luc Picard" };
 
+    Mock.Arrange(() => repo.GetByIdAsync(10)).ReturnsAsync(expected);
+
     // Act 
     Customer actual = await repo.GetByIdAsync(10);
 
@@ -38,6 +41,8 @@ public class AsyncMethodsTest
   {
     // Arrange 
     CustomerRepo repo = new();
+
+    Mock.Arrange(() => repo.GetByIdAsync(20)).ThrowsAsync<ArgumentException>();
 
     // Act 
     Task<Customer> result = repo.GetByIdAsync(20);
@@ -53,6 +58,8 @@ public class AsyncMethodsTest
   {
     // Arrange 
     CustomerRepo repo = new();
+
+    Mock.Arrange(() => repo.GetByIdAsync(30)).ThrowsAsync<ArgumentException>();
 
     // Act 
     Func<Task<Customer>> act = async () => await repo.GetByIdAsync(30);

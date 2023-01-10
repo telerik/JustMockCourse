@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Telerik.JustMock;
 
 namespace JustMockCourse.GettingStarted;
 
@@ -10,11 +11,7 @@ public class InvoiceTest
     // Arrange
     const int quantity = 1;
     Product product = new(Guid.NewGuid());
-    State state = new("West Dakota", "WD");
-    City city = new("Centreville", state);
-    Address address = new("123 Blake St.", city, "12345");
-    Customer customer = new(Guid.NewGuid(), address);
-    Invoice invoice = new(customer);
+    Invoice invoice = new(Mock.Create<Customer>());
     
     // Act
     invoice.AddItemQuantity(product, quantity);

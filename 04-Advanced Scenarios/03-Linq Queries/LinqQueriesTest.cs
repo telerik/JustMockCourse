@@ -1,22 +1,23 @@
 ﻿using FluentAssertions;
 using System.Collections;
+using Telerik.JustMock;
 
 namespace JustMockCourse.AdvancedScenarios.LinqQueries;
 
 public class SuperSimpleData
 {
-  public IEnumerable<Product> Products { get; }
+  public IEnumerable<Product>? Products { get; }
 }
 
 public class SimpleData
 {
-  public ExtendedQuery<Product> Products { get; }
+  public ExtendedQuery<Product>? Products { get; }
 
-  public ExtendedQuery<Category> Categories { get; }
+  public ExtendedQuery<Category>? Categories { get; }
 
-  public Product GetProduct(int id)
+  public Product? GetProduct(int id)
   {
-    return Products.Where(x => x.ProductID == id).FirstOrDefault();
+    return Products?.Where(x => x.ProductID == id).FirstOrDefault();
   }
 }
 
@@ -39,11 +40,11 @@ public class Product
 
   public int CategoryID { get; set; }
 
-  public string ProductName { get; set; }
+  public string? ProductName { get; set; }
 
   public int UnitsInStock { get; set; }
 
-  public string QuantityPerUnit { get; set; }
+  public string? QuantityPerUnit { get; set; }
 
   public bool Discontinued { get; set; }
 
@@ -59,7 +60,7 @@ public class Category
 {
   public int CategoryID { get; set; }
 
-  public string CategoryName { get; set; }
+  public string? CategoryName { get; set; }
 }
 
 public class LinqQueriesTest
@@ -113,10 +114,10 @@ public class LinqQueriesTest
   {
     // ARRANGE 
     var simpleData = new SuperSimpleData();
-    
+    Mock.Arrange(() => simpleData.Products).Returns(GetProducts());
 
     // ACT 
-    var actual = simpleData.Products
+    var actual = simpleData.Products?
       .Where(p => p.UnitsInStock == 50)
       .Select(p => p.ProductID)
       .SingleOrDefault();
@@ -131,10 +132,10 @@ public class LinqQueriesTest
   {
     // ARRANGE 
     var simpleData = new SimpleData();
-    
+    Mock.Arrange(() => simpleData.Products).ReturnsCollection(GetProducts());
 
     // ACT 
-    var actual = simpleData.Products
+    var actual = simpleData.Products?
       .Where(p => p.UnitsInStock == 50)
       .Select(p => p.ProductID)
       .SingleOrDefault();
@@ -148,14 +149,15 @@ public class LinqQueriesTest
   {
     // ARRANGE
     var simpleData = new SimpleData();
-    
+    Mock.Arrange(() => simpleData.Products).ReturnsCollection(GetProducts());
+    Mock.Arrange(() => simpleData.Categories).ReturnsCollection(GetCategories());
 
     // ACT 
-    var actual = simpleData.Products
-      .Join(simpleData.Categories, p => p.CategoryID, c => c.CategoryID, (p, c) => c.CategoryName);
+    var actual = simpleData.Products?
+      .Join(simpleData.Categories!, p => p.CategoryID, c => c.CategoryID, (p, c) => c.CategoryName);
 
     // ASSERT
-    actual.Count().Should().Be(3);
+    actual?.Count().Should().Be(3);
   }
 
   [Fact]
@@ -166,9 +168,17 @@ public class LinqQueriesTest
     int targetProductId = 2;
     int expectedId = 10;
 
+    Mock.Arrange(() => simpleData.Products).ReturnsCollection(GetProducts());
+    Mock.Arrange(() => simpleData.Products!
+      .Where(x => x.ProductID == targetProductId)
+      .First()
+      .GetId())
+      .Returns(expectedId)
+      .MustBeCalled();
+
 
     // ACT
-    Product actual = simpleData.GetProduct(targetProductId);
+    Product actual = simpleData.GetProduct(targetProductId)!;
 
     // ASSERT
     actual.GetId().Should().Be(expectedId);

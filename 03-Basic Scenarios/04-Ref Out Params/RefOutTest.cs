@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Telerik.JustMock;
 
 namespace JustMockCourse.BasicScenarios.RefOutParams;
 
@@ -14,9 +15,11 @@ public class RefOutTest
   public void ShouldMockRefParam()
   {
     // Arrange 
-    IParser parser = null;
+    IParser parser = Mock.Create<IParser>();
 
     string expected = "Garcia";
+
+    Mock.Arrange(() => parser.Parse(ref expected)).DoNothing();
 
     // Act 
     string actual = "Cherry";
@@ -30,9 +33,11 @@ public class RefOutTest
   public void ShouldMockOutParam()
   {
     // Arrange 
-    IParser parser = null;
+    IParser parser = Mock.Create<IParser>();
 
     string expected = "Monkey";
+
+    Mock.Arrange(() => parser.TryParse("Chunky", out expected)).Returns(true);
 
     // Act 
     bool itWorked = parser.TryParse("Chunky", out string actual);

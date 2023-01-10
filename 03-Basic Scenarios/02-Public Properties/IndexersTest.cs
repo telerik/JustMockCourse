@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using Telerik.JustMock;
+using Telerik.JustMock.Core;
 
 namespace JustMockCourse.BasicScenarios.PublicProperties;
 
@@ -23,6 +25,9 @@ public class IndexersTest
     // Arrange 
     Animals collection = new();
 
+    Mock.Arrange(() => collection[0]).Returns("dog");
+    Mock.Arrange(() => collection[1]).Returns("cat");
+
     // Act 
     string actualFirst = collection[0];
     string actualSecond = collection[1];
@@ -36,7 +41,10 @@ public class IndexersTest
   public void ShouldAssertIndexedSetWithMatcher()
   {
     // Arrange 
-    Animals collection = new();
+    Animals collection = Mock.Create<Animals>(Behavior.Strict);
+
+    Mock.ArrangeSet(() => { collection[0] = Arg.Matches<string>(x => x.Equals("dog")); });
+    Mock.ArrangeSet(() => { collection[1] = Arg.IsAny<string>(); });
 
     // Act 
     Action firstAction = () =>
@@ -45,10 +53,10 @@ public class IndexersTest
       collection[1] = "cat";
     };
 
-    Action secondAction = () => collection[0] = "zebra";
+    Action secondAction = () => collection[5] = "zebra";
 
     // Assert 
-    // firstAction.Should().NotThrow();
-    // secondAction.Should().Throw<StrictMockException>();
+    firstAction.Should().NotThrow();
+    secondAction.Should().Throw<StrictMockException>();
   }
 }

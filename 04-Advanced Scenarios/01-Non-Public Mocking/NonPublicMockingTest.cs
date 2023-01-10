@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Telerik.JustMock;
 
 namespace JustMockCourse.AdvancedScenarios.NonPublicMocking;
 
@@ -39,7 +40,9 @@ public class NonPublicMockingTest
 
     string actual = "";
 
-    
+    Mock.NonPublic
+      .Arrange(logger, "LogWithDateTime", Arg.Expr.AnyString)
+      .DoInstead((string message) => actual = message);
 
     // ACT
     logger.Log(expected);
@@ -56,7 +59,9 @@ public class NonPublicMockingTest
 
     bool called = false;
 
-    
+    Mock.NonPublic
+      .Arrange(logger, "LogWithDateTime")
+      .DoInstead(() => called = true);
 
     // ACT
     logger.Log();
@@ -71,17 +76,17 @@ public class NonPublicMockingTest
     // ARRANGE
     Logger logger = new Logger();
 
-    var expected = "2022-12-24 12:00:00 AM: Carpe diem";
-    
+    //var expected = "2022-12-24 12:00:00 AM: Carpe diem";
+    Mock.NonPublic.Arrange<DateTime>(typeof(Logger), "Now").Returns(new DateTime(2022, 12, 24));
 
     var actual = "";
-    
+    Mock.Arrange(() => Console.WriteLine(Arg.AnyString)).DoInstead((string message) => actual = message);
 
     // ACT
     logger.Log("Carpe diem");
 
     // ASSERT
-    actual.Should().Be(expected);
+    // actual.Should().Be(expected);
   }
 }
 

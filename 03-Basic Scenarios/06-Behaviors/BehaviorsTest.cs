@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using System.Numerics;
+using Telerik.JustMock;
+using Telerik.JustMock.Core;
 
 namespace JustMockCourse.BasicScenarios.Behaviors;
 
@@ -39,7 +41,7 @@ public class BehaviorsTest
   public void ShouldTestRecursiveLooseBehavior()
   {
     // Arrange 
-    Player player = null;
+    Player player = Mock.Create<Player>(Behavior.RecursiveLoose);
 
     // Act 
     float actual = player.Position.GetDistanceTo(new Position(0, 10));
@@ -56,7 +58,7 @@ public class BehaviorsTest
   public void ShouldTestLooseBehavior()
   {
     // Arrange 
-    Player player = null;
+    Player player = Mock.Create<Player>(Behavior.Loose);
 
     // Assert
     player.Name.Should().Be(default);
@@ -70,7 +72,7 @@ public class BehaviorsTest
   {
     // Arrange 
     string name = "William Adama";
-    Player player = null;
+    Player player = Mock.Create<Player>(Behavior.CallOriginal, name, new Position(0, 0));
 
     // Act 
     float actual = player.Position.GetDistanceTo(new Position(0, 10));
@@ -87,9 +89,11 @@ public class BehaviorsTest
   public void ShouldTestStrictBehavior()
   {
     // Arrange 
-    Player player = null;
+    Player player = Mock.Create<Player>(Behavior.Strict);
 
     string expected = "GAIUS BALTAR";
+
+    Mock.Arrange(() => player.ScreamName()).Returns(expected);
 
     // Act 
     Func<string> getName = () => player.Name;
@@ -98,9 +102,9 @@ public class BehaviorsTest
     string actual = player.ScreamName();
 
     // Assert
-    // getName.Should().Throw<StrictMockException>();
-    // getHealth.Should().Throw<StrictMockException>();
-    // getPosition.Should().Throw<StrictMockException>();
+    getName.Should().Throw<StrictMockException>();
+    getHealth.Should().Throw<StrictMockException>();
+    getPosition.Should().Throw<StrictMockException>();
     actual.Should().Be(expected);
   }
 }

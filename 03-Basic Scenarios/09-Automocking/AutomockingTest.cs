@@ -1,4 +1,7 @@
 ﻿using FluentAssertions;
+using Telerik.JustMock;
+using Telerik.JustMock.AutoMock;
+using Telerik.JustMock.Helpers;
 
 namespace JustMockCourse.BasicScenarios.Automocking;
 
@@ -8,7 +11,7 @@ public class SmartHome
   private readonly ITelevision tv;
   private readonly ISpeakers speakers;
 
-  public SmartHome(ILights lights, ITelevision tv, ISpeakers speakers)
+  public SmartHome(ILights lights, ITelevision tv, ISpeakers speakers, IThermostat thermostat)
   {
     this.lights = lights;
     this.tv = tv;
@@ -29,14 +32,17 @@ public class AutomockingTest
   public void ShouldMockDependenciesWithoutContainer()
   {
     // Arrange 
-    ILights lights = null;
-    ITelevision tv = null;
-    ISpeakers speakers = null;
+    ILights lights = Mock.Create<ILights>();
+    ITelevision tv = Mock.Create<ITelevision>();
+    ISpeakers speakers = Mock.Create<ISpeakers>();
+    IThermostat thermostat= Mock.Create<IThermostat>();
 
-    SmartHome home = new(lights, tv, speakers);
+    SmartHome home = new(lights, tv, speakers, thermostat);
 
     int expectedChannel = 10;
     int expectedVolume = 75;
+
+    speakers.Arrange(sp => sp.Volume).Returns(expectedVolume);
 
     // Act 
     int actualVolume = home.GetVolume(); 
@@ -52,12 +58,13 @@ public class AutomockingTest
   public void ShouldMockDependenciesWithContainer()
   {
     // Arrange 
-    SmartHome home = null;
+    var container = new MockingContainer<SmartHome>();
+    SmartHome home = container.Instance;
 
     int expectedChannel = 10;
     int expectedVolume = 75;
 
-    
+    container.Arrange<ISpeakers>(speakers => speakers.Volume).Returns(expectedVolume);
 
     // Act 
     int actualVolume = home.GetVolume();
@@ -66,6 +73,6 @@ public class AutomockingTest
 
     // Assert
     actualVolume.Should().Be(expectedVolume);
-    //container.AssertSet<ITelevision>(tv => tv.Channel = expectedChannel);
+    container.AssertSet<ITelevision>(tv => tv.Channel = expectedChannel);
   }
 }
