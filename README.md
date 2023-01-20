@@ -1,6 +1,6 @@
 # Progress Telerik JustMock course
 
-Sample code to demonstrate the use of JustMock in the course, [Progress Telerik JustMock course](https://urltobedetermined).
+Sample code to demonstrate the use of JustMock in the course, [Progress Telerik JustMock course](https://learn.telerik.com/learn/course/60).
 
 ## Give a Star! :star:
 If you like this project please give it a star. Thanks!
@@ -14,9 +14,9 @@ The sample code was written using [Visual Studio 2022](https://visualstudio.com/
 
 ## Reporting Bugs and Asking Questions
 
-Please use [Issues](https://github.com/ardalis/JustMockCourse/issues) to report actual bugs in the code. If you have questions, please ask them in the [course discussion forum](https://app.pluralsight.com/library/courses/csharp-solid-principles/discussion) or on twitter (mention [@ardalis](https://twitter.com/ardalis)).
+Please use [Issues](https://github.com/ardalis/JustMockCourse/issues) to report actual bugs in the code. If you have questions, please ask them in the [JustMock forum](https://www.telerik.com/forums/justmock).
 
-## Podcast and Other Resources
+## Other Resources
 
 If you found this course helpful here are some other resources you may like:
 
