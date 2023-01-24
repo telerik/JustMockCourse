@@ -1,6 +1,6 @@
 # Progress Telerik JustMock course
 
-Sample code to demonstrate the use of JustMock in the course, [Progress Telerik JustMock course](https://learn.telerik.com/learn/course/60).
+Sample code to demonstrate the use of JustMock in the course, [Progress Telerik JustMock course](https://learn.telerik.com/learn/course/internal/view/elearning/60/justmock-2023).
 
 ## Give a Star! :star:
 If you like this project please give it a star. Thanks!
